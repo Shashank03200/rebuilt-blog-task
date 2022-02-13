@@ -10,6 +10,11 @@ const registerUser = async (req, res, next) => {
       email,
       password,
     });
+    
+     const exisitingUser = await User.findOne({ email });
+    if (exisitingUser) {
+      throw createError.BadRequest("Email already registered.");
+    }
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
